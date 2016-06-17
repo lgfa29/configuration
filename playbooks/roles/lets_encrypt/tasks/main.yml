@@ -27,19 +27,24 @@
   when: LETS_ENCRYPT_DOMAINS|length < 1
 
 - name: install deps
-  debug: TODO
+  apt:
+    name: "{{ item }}"
+    install_recommends: yes
+    state: present 
+    update_cache: yes
+  with_items: "{{ lets_encrypt_debian_pkgs }}"
 
 - name: "Install let's encrypt"
   git:
-    repo: https://github.com/letsencrypt/letsencrypt
-    dest: /opt/letsencrypt
+    repo: "{{ lets_encrypt_git_repo }}"
+    dest: "{{ lets_encrypt_dir }}"
 
 - name: create .well-known directory
   file:
-    path: /usr/share/nginx/www/.well-known
+    path: "{{ lets_encrypt_challange_dir }}"
     state: directory
-    owner: www-data
-    group: www-data
+    owner: "{{ let_encrypt_nginx_user }}"
+    group: "{{ let_encrypt_nginx_group }}"
 
 - name: "render let's encrypt script"
   template:

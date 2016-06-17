@@ -1,6 +1,6 @@
 ---
 - hosts: localhost
-  gather_facts: False
+  gather_facts: True
   vars:
     EDXAPP_LMS_NGINX_PORT: '80'
     EDXAPP_LMS_NGINX_PORT: '80'

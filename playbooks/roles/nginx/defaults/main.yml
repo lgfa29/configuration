@@ -18,6 +18,7 @@ NGINX_USERS:
 
 NGINX_ENABLE_SSL: False
 NGINX_REDIRECT_TO_HTTPS: False
+NGINX_ENABLE_LETS_ENCRYPT: False
 # Set these to real paths on your
 # filesystem, otherwise nginx will
 # use a self-signed snake-oil cert
@@ -33,6 +34,13 @@ NGINX_HTTPS_REDIRECT_STRATEGY: "scheme"
 
 NGINX_SSL_CERTIFICATE: 'ssl-cert-snakeoil.pem'
 NGINX_SSL_KEY: 'ssl-cert-snakeoil.key'
+
+NGINX_SSL_CERTIFICATES: 
+  - cms: '/etc/ssl/certs/ssl-cert-snakeoil.pem'
+  - lms: '/etc/ssl/certs/ssl-cert-snakeoil.pem' 
+NGINX_SSL_KEYS:
+  - cms: '/etc/ssl/private/ssl-cert-snakeoil.key'
+  - lms: '/etc/ssl/private/ssl-cert-snakeoil.key'
 
 NGINX_LOG_FORMAT_NAME: 'p_combined'
 # When set to False, nginx will pass X-Forwarded-For, X-Forwarded-Port,

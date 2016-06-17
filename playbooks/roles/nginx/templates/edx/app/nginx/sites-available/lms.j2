@@ -16,7 +16,6 @@ upstream lms-backend {
 limit_req_zone $cookie_{{ EDXAPP_SESSION_COOKIE_NAME }} zone=cookies:10m rate={{ EDXAPP_COURSES_REQUEST_RATE }};
 {%- endif %}
 
-{% include "lets_encrypt.j2" %}
 
 
 {% if NGINX_EDXAPP_EMBARGO_CIDRS %}
@@ -58,8 +57,8 @@ error_page {{ k }} {{ v }};
   {% if NGINX_ENABLE_SSL %}
   listen {{ EDXAPP_LMS_SSL_NGINX_PORT }} {{ default_site }} ssl;
 
-  ssl_certificate /etc/ssl/certs/{{ NGINX_SSL_CERTIFICATE|basename }};
-  ssl_certificate_key /etc/ssl/private/{{ NGINX_SSL_KEY|basename }};
+  ssl_certificate {{ NGINX_SSL_CERTIFICATES['lms'] }};
+  ssl_certificate_key {{ NGINX_SSL_KEYS['lms'] }};
   # request the browser to use SSL for all connections
   add_header Strict-Transport-Security "max-age=31536000; includeSubDomains";
   {% endif %}
@@ -119,6 +118,10 @@ error_page {{ k }} {{ v }};
     proxy_redirect off;
     proxy_pass http://lms-backend;
   }
+
+  {% if NGINX_ENABLE_LETS_ENCRYPT %}
+    {% include "lets_encrypt.j2" %}
+  {% endif %}
 
   location / {
     {% if EDXAPP_LMS_ENABLE_BASIC_AUTH|bool %}

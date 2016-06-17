@@ -36,8 +36,8 @@ error_page {{ k }} {{ v }};
 
   listen {{ EDXAPP_CMS_SSL_NGINX_PORT }} ssl;
 
-  ssl_certificate /etc/ssl/certs/{{ NGINX_SSL_CERTIFICATE|basename }};
-  ssl_certificate_key /etc/ssl/private/{{ NGINX_SSL_KEY|basename }};
+  ssl_certificate {{ NGINX_SSL_CERTIFICATES['cms'] }};
+  ssl_certificate_key {{ NGINX_SSL_KEYS['cms'] }};
   # request the browser to use SSL for all connections
   add_header Strict-Transport-Security "max-age=31536000; includeSubDomains";
   {% endif %}
@@ -100,14 +100,16 @@ error_page {{ k }} {{ v }};
     proxy_pass http://cms-backend;
   }
 
-{% include "lets_encrypt.j2" %}
-
   location / {
     {% if EDXAPP_CMS_ENABLE_BASIC_AUTH|bool %}
       {% include "basic-auth.j2" %}
     {% endif %}
     try_files $uri @proxy_to_cms_app;
   }
+
+  {% if NGINX_ENABLE_LETS_ENCRYPT %}
+    {% include "lets_encrypt.j2" %}
+  {% endif %}
 
   # No basic auth security on the github_service_hook url, so that github can use it for cms
   location /github_service_hook {

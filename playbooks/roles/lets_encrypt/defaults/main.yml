@@ -18,7 +18,18 @@ LETS_ENCRYPT_EMAIL: !!null
 #
 # OS packages
 #
-
 lets_encrypt_debian_pkgs: ['git', 'bc']
 
-lets_encrypt_redhat_pkgs: []
+#
+# Let's Encrypt
+#
+lets_encrypt_git_repo: https://github.com/certbot/certbot.git
+lets_encrypt_dir: /opt/letsencrypt
+
+#
+# nginx
+#
+let_encrypt_nginx_user: www-data
+let_encrypt_nginx_group: www-data
+lets_encrypt_nginx_root: /usr/share/nginx/www/
+lets_encrypt_challange_dir: '{{lets_encrypt_nginx_root}}/.well-known'
